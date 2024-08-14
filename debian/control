@@ -78,7 +78,8 @@ Depends: ${misc:Depends},
          gstreamer1.0-gtk3,
          gstreamer1.0-plugins-base (>= 1.6.0),
          gstreamer1.0-plugins-good (>= 1.10),
-         gstreamer1.0-x
+         gstreamer1.0-x,
+	 codec-multimedia
 Recommends: ${gst:Recommends},
             totem-plugins
 Suggests: ${gst:Suggests},

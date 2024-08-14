@@ -1,3 +1,9 @@
+totem (43.0.Policorp-1) unstable; urgency=medium
+
+  * Added patch to use codec-install
+
+ -- Edson Juliano Drosdeck <edson@policorp.com.br>  Thu, 08 Aug 2024 18:14:08 -0300
+
 totem (43.0.Policorp-0) unstable; urgency=medium
 
   * First version in Policorp
