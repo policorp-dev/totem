@@ -21,8 +21,6 @@
 
 #include "gd-toggle-pixbuf-renderer.h"
 
-G_DEFINE_TYPE (GdTogglePixbufRenderer, gd_toggle_pixbuf_renderer, GTK_TYPE_CELL_RENDERER_PIXBUF);
-
 enum {
   PROP_ACTIVE = 1,
   PROP_TOGGLE_VISIBLE,
@@ -32,12 +30,16 @@ enum {
 
 static GParamSpec *properties[NUM_PROPERTIES] = { NULL, };
 
+typedef struct _GdTogglePixbufRendererPrivate GdTogglePixbufRendererPrivate;
+
 struct _GdTogglePixbufRendererPrivate {
   gboolean active;
   gboolean toggle_visible;
 
   guint pulse;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdTogglePixbufRenderer, gd_toggle_pixbuf_renderer, GTK_TYPE_CELL_RENDERER_PIXBUF)
 
 static void
 render_check (GdTogglePixbufRenderer *self,
@@ -48,13 +50,15 @@ render_check (GdTogglePixbufRenderer *self,
               gint                    xpad,
               gint                    ypad)
 {
+  GdTogglePixbufRendererPrivate *priv;
   GtkStyleContext *context;
   gint check_x, check_y, x_offset;
   GtkTextDirection direction;
 
+  priv = gd_toggle_pixbuf_renderer_get_instance_private (self);
   context = gtk_widget_get_style_context (widget);
 
-  if (!self->priv->toggle_visible)
+  if (!priv->toggle_visible)
     return;
 
   direction = gtk_widget_get_direction (widget);
@@ -69,7 +73,7 @@ render_check (GdTogglePixbufRenderer *self,
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, GTK_STYLE_CLASS_CHECK);
 
-  if (self->priv->active)
+  if (priv->active)
     gtk_style_context_set_state (context, gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_CHECKED);
 
   gtk_render_background (context, cr,
@@ -93,9 +97,12 @@ render_activity (GdTogglePixbufRenderer *self,
                  gint                    xpad,
                  gint                    ypad)
 {
+  GdTogglePixbufRendererPrivate *priv;
   gint x, y, width, height;
 
-  if (self->priv->pulse == 0)
+  priv = gd_toggle_pixbuf_renderer_get_instance_private (self);
+
+  if (priv->pulse == 0)
     return;
 
   width = cell_area->width / 4;
@@ -104,14 +111,16 @@ render_activity (GdTogglePixbufRenderer *self,
   x = cell_area->x + (cell_area->width / 2) - (width / 2) - xpad;
   y = cell_area->y + (cell_area->height / 2) - (height / 2) - ypad;
 
+  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
   gtk_paint_spinner (gtk_widget_get_style (widget),
                      cr,
                      GTK_STATE_FLAG_ACTIVE,
                      widget,
                      NULL,
-                     (guint) self->priv->pulse - 1,
+                     (guint) priv->pulse - 1,
                      x, y,
                      width, height);
+  G_GNUC_END_IGNORE_DEPRECATIONS;
 }
 
 static void
@@ -171,17 +180,20 @@ gd_toggle_pixbuf_renderer_get_property (GObject    *object,
                                         GParamSpec *pspec)
 {
   GdTogglePixbufRenderer *self = GD_TOGGLE_PIXBUF_RENDERER (object);
+  GdTogglePixbufRendererPrivate *priv;
+
+  priv = gd_toggle_pixbuf_renderer_get_instance_private (self);
 
   switch (property_id)
     {
     case PROP_ACTIVE:
-      g_value_set_boolean (value, self->priv->active);
+      g_value_set_boolean (value, priv->active);
       break;
     case PROP_TOGGLE_VISIBLE:
-      g_value_set_boolean (value, self->priv->toggle_visible);
+      g_value_set_boolean (value, priv->toggle_visible);
       break;
     case PROP_PULSE:
-      g_value_set_uint (value, self->priv->pulse);
+      g_value_set_uint (value, priv->pulse);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -196,17 +208,20 @@ gd_toggle_pixbuf_renderer_set_property (GObject    *object,
                                         GParamSpec *pspec)
 {
   GdTogglePixbufRenderer *self = GD_TOGGLE_PIXBUF_RENDERER (object);
+  GdTogglePixbufRendererPrivate *priv;
+
+  priv = gd_toggle_pixbuf_renderer_get_instance_private (self);
 
   switch (property_id)
     {
     case PROP_ACTIVE:
-      self->priv->active = g_value_get_boolean (value);
+      priv->active = g_value_get_boolean (value);
       break;
     case PROP_TOGGLE_VISIBLE:
-      self->priv->toggle_visible = g_value_get_boolean (value);
+      priv->toggle_visible = g_value_get_boolean (value);
       break;
     case PROP_PULSE:
-      self->priv->pulse = g_value_get_uint (value);
+      priv->pulse = g_value_get_uint (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -250,16 +265,12 @@ gd_toggle_pixbuf_renderer_class_init (GdTogglePixbufRendererClass *klass)
 		       G_PARAM_READWRITE |
 		       G_PARAM_STATIC_STRINGS);
 
-  g_type_class_add_private (klass, sizeof (GdTogglePixbufRendererPrivate));
   g_object_class_install_properties (oclass, NUM_PROPERTIES, properties);
 }
 
 static void
 gd_toggle_pixbuf_renderer_init (GdTogglePixbufRenderer *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, GD_TYPE_TOGGLE_PIXBUF_RENDERER,
-                                            GdTogglePixbufRendererPrivate);
-  self->priv->pulse = 0;
 }
 
 GtkCellRenderer *

@@ -455,6 +455,7 @@ class OpenSubtitles (GObject.Object, # pylint: disable=R0902
     def _build_dialog (self):
         ui_file_path = os.path.dirname (os.path.abspath (__file__)) + sep + 'opensubtitles.ui'
         builder = Gtk.Builder.new_from_file (ui_file_path)
+        builder.connect_signals(self)
 
         # Obtain all the widgets we need to initialize
         combobox = builder.get_object ('language_combobox')
@@ -525,6 +526,10 @@ class OpenSubtitles (GObject.Object, # pylint: disable=R0902
                                                 self.__on_treeview__row_change)
         self._tree_view.connect ('row-activated',
                                self.__on_treeview__row_activate)
+
+    def _hide_on_delete(self, *_):
+        self._dialog.hide_on_delete()
+        return True
 
     def _show_dialog (self, *_):
         if not self._dialog:
@@ -686,6 +691,8 @@ class OpenSubtitles (GObject.Object, # pylint: disable=R0902
 
         if suburi:
             self._totem.set_current_subtitle (suburi) # pylint: disable=no-member
+
+        self._action.set_enabled (True)
 
         return False
 

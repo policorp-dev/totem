@@ -20,10 +20,6 @@
 #ifndef __GD_H__
 #define __GD_H__
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #include <glib-object.h>
 
 G_BEGIN_DECLS
@@ -32,7 +28,6 @@ G_BEGIN_DECLS
 
 #ifdef LIBGD_GTK_HACKS
 # include <libgd/gd-icon-utils.h>
-# include <libgd/gd-entry-focus-hack.h>
 #endif
 
 #ifdef LIBGD__BOX_COMMON

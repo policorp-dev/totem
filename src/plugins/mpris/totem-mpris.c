@@ -251,10 +251,13 @@ static const GDBusInterfaceVTable root_vtable =
 
 /* MPRIS player interface */
 
-const char *str_metadata[] = {
-	"xesam:title",
-	"xesam:artist",
-	"xesam:album",
+struct {
+	const char *property;
+	gboolean is_strv;
+} str_metadata[] = {
+	{ "xesam:title", FALSE },
+	{ "xesam:artist", TRUE },
+	{ "xesam:album", FALSE }
 };
 
 static void
@@ -274,16 +277,31 @@ calculate_metadata (TotemMprisPlugin *pi,
 			       "{sv}",
 			       "xesam:trackNumber",
 			       g_variant_new_uint32 (pi->track_number));
+	/* See https://gitlab.freedesktop.org/mpris/mpris-spec/-/issues/19 */
+	g_variant_builder_add (builder,
+			       "{sv}",
+			       "mpris:trackid",
+			       g_variant_new_object_path ("/org/mpris/MediaPlayer2/TrackList/NoTrack"));
 	for (i = 0; i < G_N_ELEMENTS (str_metadata); i++) {
 		const char *str;
 
-		str = g_hash_table_lookup (pi->metadata, str_metadata[i]);
+		str = g_hash_table_lookup (pi->metadata, str_metadata[i].property);
 		if (!str)
 			continue;
-		g_variant_builder_add (builder,
-				       "{sv}",
-				       str_metadata[i],
-				       g_variant_new_string (str));
+		if (!str_metadata[i].is_strv) {
+			g_variant_builder_add (builder,
+					       "{sv}",
+					       str_metadata[i].property,
+					       g_variant_new_string (str));
+		} else {
+			const char *strv[] = { NULL };
+
+			strv[0] = str;
+			g_variant_builder_add (builder,
+					       "{sv}",
+					       str_metadata[i].property,
+					       g_variant_new_strv (strv, 1));
+		}
 	}
 }
 

@@ -1,0 +1,55 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Tue, 22 Oct 2024 21:34:42 +0100
+Subject: Mark lint checks as part of a suite
+
+It's common for new versions of a lint tool to change behaviour in ways
+that cause previously valid source to be rejected, so OS distributions
+often won't want to run them at build-time to avoid build regressions.
+By marking pylint and other lint checks with a suite, OS distributors
+can avoid them by running `meson test --no-suite=lint`.
+
+Signed-off-by: Simon McVittie <smcv@debian.org>
+Forwarded: https://gitlab.gnome.org/GNOME/totem/-/merge_requests/395
+---
+ src/plugins/opensubtitles/meson.build | 1 +
+ src/plugins/pythonconsole/meson.build | 1 +
+ src/plugins/samplepython/meson.build  | 6 +++++-
+ 3 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/src/plugins/opensubtitles/meson.build b/src/plugins/opensubtitles/meson.build
+index e47681b..f9e5888 100644
+--- a/src/plugins/opensubtitles/meson.build
++++ b/src/plugins/opensubtitles/meson.build
+@@ -44,5 +44,6 @@ if pylint.found()
+        pylint,
+        args: pylint_flags + files([ plugin_name + '.py', 'hash.py' ]),
+        env: nomalloc,
++       suite: ['lint'],
+        timeout: 120)
+ endif
+diff --git a/src/plugins/pythonconsole/meson.build b/src/plugins/pythonconsole/meson.build
+index 4c33077..c215220 100644
+--- a/src/plugins/pythonconsole/meson.build
++++ b/src/plugins/pythonconsole/meson.build
+@@ -43,5 +43,6 @@ if pylint.found()
+        pylint,
+        args: pylint_flags + files([ plugin_name + '.py', 'console.py' ]),
+        env: nomalloc,
++       suite: ['lint'],
+        timeout: 120)
+ endif
+diff --git a/src/plugins/samplepython/meson.build b/src/plugins/samplepython/meson.build
+index 40b1b10..3a5c7be 100644
+--- a/src/plugins/samplepython/meson.build
++++ b/src/plugins/samplepython/meson.build
+@@ -18,5 +18,9 @@ if plugin_install
+ endif
+ 
+ if pylint.found()
+-  test('pylint-' + plugin_name, pylint, args: pylint_flags + files([ plugin_name + '.py' ]))
++  test('pylint-' + plugin_name,
++    pylint,
++    args: pylint_flags + files([ plugin_name + '.py' ]),
++    suite: ['lint'],
++  )
+ endif

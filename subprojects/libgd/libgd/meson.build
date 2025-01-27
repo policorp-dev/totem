@@ -11,10 +11,11 @@ private_c_args = [
   '-DG_DISABLE_DEPRECATED',
 ]
 
-if get_option('with-gtk-hacks')
+if (get_option('with-gtk-hacks') or
+    get_option('with-main-box') or
+    get_option('with-main-icon-box') or
+    get_option('with-main-view'))
   sources += [
-    'gd-entry-focus-hack.c',
-    'gd-entry-focus-hack.h',
     'gd-icon-utils.c',
     'gd-icon-utils.h',
   ]
@@ -33,12 +34,15 @@ if (get_option('with-main-box') or
   ]
   c_args += '-DLIBGD__BOX_COMMON=1'
 
-  if get_option('with-main-icon-box')
+  if (get_option('with-main-box') or
+      get_option('with-main-icon-box'))
     sources += [
       'gd-main-icon-box.c',
       'gd-main-icon-box.h',
       'gd-main-icon-box-child.c',
       'gd-main-icon-box-child.h',
+      'gd-main-icon-box-icon.c',
+      'gd-main-icon-box-icon.h',
       'gd-icon-utils.c',
       'gd-icon-utils.h',
     ]

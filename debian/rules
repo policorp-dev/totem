@@ -18,7 +18,7 @@ execute_before_dh_auto_build:
 	dh_auto_build -- src/Totem-1.0.gir
 
 override_dh_auto_test:
-	NO_AT_BRIDGE=1 xvfb-run -a dh_auto_test
+	NO_AT_BRIDGE=1 xvfb-run -a dh_auto_test -- --no-suite=lint
 
 override_dh_makeshlibs:
 	dh_makeshlibs -p totem -X/usr/lib/$(DEB_HOST_MULTIARCH)/nautilus/
@@ -43,3 +43,5 @@ else
 		-Vgst:Suggests="gstreamer1.0-plugins-bad, gstreamer1.0-libav, gstreamer1.0-plugins-ugly" \
 		-Vgrilo:Depends="grilo-plugins-0.3-base"
 endif
+
+override_dh_gnome_clean:

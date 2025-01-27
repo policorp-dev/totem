@@ -323,7 +323,7 @@ gd_main_icon_box_activate_cursor_child (GtkFlowBox *flow_box)
 
  out:
   GTK_FLOW_BOX_CLASS (gd_main_icon_box_parent_class)->activate_cursor_child (flow_box);
-  g_clear_pointer (&event, (GDestroyNotify) gdk_event_free);
+  g_clear_pointer (&event, gdk_event_free);
 }
 
 static gboolean
@@ -386,7 +386,7 @@ gd_main_icon_box_button_release_event (GtkWidget *widget, GdkEventButton *event)
     }
 
   if (!priv->selection_mode &&
-      (event->button == GDK_BUTTON_PRIMARY && (event->state & GDK_CONTROL_MASK) != 0 ||
+      ((event->button == GDK_BUTTON_PRIMARY && (event->state & GDK_CONTROL_MASK) != 0) ||
        event->button == GDK_BUTTON_SECONDARY))
     {
       g_signal_emit_by_name (self, "selection-mode-request");
@@ -522,7 +522,7 @@ gd_main_icon_box_child_activated (GtkFlowBox *flow_box, GtkFlowBoxChild *child)
     }
 
  out:
-  g_clear_pointer (&event, (GDestroyNotify) gdk_event_free);
+  g_clear_pointer (&event, gdk_event_free);
 }
 
 static void
@@ -571,7 +571,7 @@ gd_main_icon_box_drag_begin (GtkWidget *widget, GdkDragContext *context)
   gtk_drag_set_icon_surface (context, drag_icon);
 
  out:
-  g_clear_pointer (&drag_icon, (GDestroyNotify) cairo_surface_destroy);
+  g_clear_pointer (&drag_icon, cairo_surface_destroy);
 }
 
 static void
@@ -595,7 +595,6 @@ gd_main_icon_box_drag_data_get (GtkWidget *widget,
   GdMainIconBox *self = GD_MAIN_ICON_BOX (widget);
   GdMainIconBoxPrivate *priv;
   GPtrArray *uri_array = NULL;
-  gchar **uris = NULL;
 
   priv = gd_main_icon_box_get_instance_private (self);
 
@@ -637,7 +636,7 @@ gd_main_icon_box_drag_data_get (GtkWidget *widget,
   gtk_selection_data_set_uris (data, (gchar **) uri_array->pdata);
 
  out:
-  g_clear_pointer (&uri_array, (GDestroyNotify) g_ptr_array_unref);
+  g_clear_pointer (&uri_array, g_ptr_array_unref);
 }
 
 static gboolean
@@ -677,8 +676,8 @@ gd_main_icon_box_focus (GtkWidget *widget, GtkDirectionType direction)
   res = GDK_EVENT_STOP;
 
  out:
-  g_clear_pointer (&fake_event, (GDestroyNotify) gdk_event_free);
-  g_clear_pointer (&event, (GDestroyNotify) gdk_event_free);
+  g_clear_pointer (&fake_event, gdk_event_free);
+  g_clear_pointer (&event, gdk_event_free);
   return res;
 }
 
@@ -760,8 +759,8 @@ gd_main_icon_box_move_cursor (GtkFlowBox *flow_box, GtkMovementStep step, gint c
   res = GDK_EVENT_STOP;
 
  out:
-  g_clear_pointer (&fake_event, (GDestroyNotify) gdk_event_free);
-  g_clear_pointer (&event, (GDestroyNotify) gdk_event_free);
+  g_clear_pointer (&fake_event, gdk_event_free);
+  g_clear_pointer (&event, gdk_event_free);
   return res;
 }
 
