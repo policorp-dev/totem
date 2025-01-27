@@ -1,8 +1,7 @@
 Source: totem
 Section: video
 Priority: optional
-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>
-Uploaders: Jeremy Bícha <jbicha@ubuntu.com>, Laurent Bigonville <bigon@debian.org>, Marco Trevisan (Treviño) <marco@ubuntu.com>
+Maintainer: Edson Juliano Drodeck <edson@policorp.com.br>
 Build-Depends: appstream-util,
                debhelper-compat (= 13),
                dh-sequence-gir,
@@ -43,8 +42,6 @@ Build-Depends: appstream-util,
 Build-Depends-Indep: libgdk-pixbuf2.0-doc, libglib2.0-doc, libgtk-3-doc
 Rules-Requires-Root: no
 Standards-Version: 4.7.0
-Vcs-Browser: https://salsa.debian.org/gnome-team/totem
-Vcs-Git: https://salsa.debian.org/gnome-team/totem.git
 Homepage: https://wiki.gnome.org/Apps/Videos
 
 Package: libtotem0
