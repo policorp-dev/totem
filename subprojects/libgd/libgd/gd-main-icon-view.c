@@ -33,6 +33,8 @@
 #define VIEW_COLUMN_SPACING 20
 #define VIEW_MARGIN 16
 
+typedef struct _GdMainIconViewPrivate GdMainIconViewPrivate;
+
 struct _GdMainIconViewPrivate {
   GtkCellRenderer *pixbuf_cell;
   GtkCellRenderer *text_cell;
@@ -151,6 +153,7 @@ gd_main_icon_view_constructed (GObject *obj)
   priv->text_cell = cell = gd_two_lines_renderer_new ();
   g_object_set (cell,
                 "xalign", 0.5,
+                "yalign", 0.0,
                 "alignment", PANGO_ALIGN_CENTER,
                 "wrap-mode", PANGO_WRAP_WORD_CHAR,
                 "wrap-width", VIEW_ITEM_WRAP_WIDTH,
@@ -306,9 +309,13 @@ gd_main_icon_view_draw (GtkWidget *widget,
 	  cairo_path_destroy (path);
 
 	  state = gtk_widget_get_state_flags (widget);
+
+	  G_GNUC_BEGIN_IGNORE_DEPRECATIONS;
 	  gtk_style_context_get_border_color (context,
 					      state,
 					      &border_color);
+	  G_GNUC_END_IGNORE_DEPRECATIONS;
+
 	  gtk_style_context_get_border (context, state,
 					&border);
 

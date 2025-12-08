@@ -2766,6 +2766,10 @@ seek_slider_pressed_cb (GtkWidget *widget, GdkEventButton *event, TotemObject *t
 	 */
 	event->button = GDK_BUTTON_PRIMARY;
 
+	g_object_set (gtk_widget_get_settings (widget),
+		      "gtk-primary-button-warps-slider", GINT_TO_POINTER(TRUE),
+		      NULL);
+
 	totem->seek_lock = TRUE;
 	mark_popup_busy (totem, "seek started");
 
@@ -4187,6 +4191,8 @@ video_widget_create (TotemObject *totem)
 
 	if (g_settings_get_boolean (totem->settings, "force-software-decoders"))
 		totem_gst_disable_hardware_decoders ();
+	else
+		totem_gst_ensure_newer_hardware_decoders ();
 
 	if (!bacon_video_widget_check_init (totem->bvw, &err)) {
 		totem_interface_error_blocking (_("Videos could not startup."),

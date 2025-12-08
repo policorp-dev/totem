@@ -37,8 +37,6 @@ EXTRA_DIST += $(catalog_sources)
 
 if LIBGD_GTK_HACKS
 gtk_hacks_sources =                             \
-        libgd/gd-entry-focus-hack.c             \
-        libgd/gd-entry-focus-hack.h             \
         libgd/gd-icon-utils.c		        \
         libgd/gd-icon-utils.h			\
         $(NULL)
@@ -160,11 +158,23 @@ tagged_entry_sources =				\
 nodist_libgd_la_SOURCES += $(tagged_entry_sources)
 EXTRA_DIST += $(tagged_entry_sources)
 
-noinst_PROGRAMS += test-tagged-entry
+noinst_PROGRAMS +=				\
+	test-tagged-entry			\
+	test-tagged-entry-2			\
+	$(null)
+
 test_tagged_entry_SOURCES =				\
 	test-tagged-entry.c				\
 	$(NULL)
 test_tagged_entry_LDADD =				\
+	$(LIBGD_LIBS)				\
+	libgd.la				\
+	$(NULL)
+
+test_tagged_entry_2_SOURCES =			\
+	test-tagged-entry-2.c			\
+	$(NULL)
+test_tagged_entry_2_LDADD =			\
 	$(LIBGD_LIBS)				\
 	libgd.la				\
 	$(NULL)
@@ -189,9 +199,8 @@ Gd_1_0_gir_INCLUDES = $(LIBGD_GIR_INCLUDES)
 Gd_1_0_gir_FILES = $(nodist_libgd_la_SOURCES)
 
 if LIBGD_STATIC
-noinst_DATA += $(srcdir)/Gd-1.0.gir
-EXTRA_DIST += $(srcdir)/Gd-1.0.gir
-MAINTAINERCLEANFILES += $(srcdir)/Gd-1.0.gir
+noinst_DATA += Gd-1.0.gir
+CLEANFILES += Gd-1.0.gir
 else
 girdir= $(pkgdatadir)/gir-1.0
 typelibdir= $(pkglibdir)/girepository-1.0
@@ -204,9 +213,9 @@ endif
 endif
 
 if LIBGD_VAPI
-VAPIS = $(srcdir)/gd-1.0.vapi
+VAPIS = gd-1.0.vapi
 
-$(srcdir)/gd-1.0.vapi: $(srcdir)/Gd-1.0.gir
+gd-1.0.vapi: Gd-1.0.gir
 	$(AM_V_GEN)$(VAPIGEN)			\
 		--library gd-1.0		\
 		--pkg gtk+-3.0			\
@@ -217,6 +226,5 @@ $(srcdir)/gd-1.0.vapi: $(srcdir)/Gd-1.0.gir
 	@touch $@
 
 noinst_DATA += $(VAPIS)
-EXTRA_DIST += $(VAPIS)
-MAINTAINERCLEANFILES += $(VAPIS)
+CLEANFILES += $(VAPIS)
 endif

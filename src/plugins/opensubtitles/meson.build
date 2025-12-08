@@ -15,13 +15,13 @@ install_data(
 
 plugin_data = plugin_name + '.plugin'
 
-custom_target(
-  plugin_data,
+i18n.merge_file(
   input: plugin_data + '.desktop.in',
   output: plugin_data,
-  command: msgfmt_plugin_cmd,
-  install: true,
-  install_dir: plugin_dir
+  type: 'desktop',
+  po_dir: po_dir,
+  install_dir: plugin_dir,
+  install: true
 )
 
 schema = 'org.gnome.totem.plugins.' + plugin_name + '.gschema.xml'
@@ -42,7 +42,7 @@ install_data(
 if pylint.found()
   test('pylint-' + plugin_name,
        pylint,
-       args: pylint_flags + ['-d', 'bad-continuation' ] + files([ plugin_name + '.py', 'hash.py' ]),
+       args: pylint_flags + files([ plugin_name + '.py', 'hash.py' ]),
        env: nomalloc,
        timeout: 120)
 endif

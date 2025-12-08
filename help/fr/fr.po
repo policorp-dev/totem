@@ -7,21 +7,27 @@
 # Claude Paroz <claude@2xlibre.net>, 2006-2009.
 # Bruno Brouard <annoa.b@gmail.com>, 2009
 # Charles Monzat <charles.monzat@free.fr>, 2017-2021.
+# Irénée THIRION <irenee.thirion@e.email>, 2022.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: totem-help.HEAD\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-14 20:12+0000\n"
-"PO-Revision-Date: 2021-10-07 20:18+0200\n"
-"Last-Translator: Charles Monzat <charles.monzat@free.fr>\n"
-"Language-Team: GNOME French Team <gnomefr@traduc.org>\n"
+"POT-Creation-Date: 2022-08-18 09:01+0000\n"
+"PO-Revision-Date: 2022-08-19 00:29+0200\n"
+"Last-Translator: Irénée THIRION <irenee.thirion@e.email>\n"
+"Language-Team: French <gnomefr@traduc.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Gtranslator 40.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 42.0\n"
+"X-DL-Team: fr\n"
+"X-DL-Module: totem\n"
+"X-DL-Branch: master\n"
+"X-DL-Domain: help\n"
+"X-DL-State: Translating\n"
 
 #. Put one translator per line, in the form NAME <EMAIL>, YEAR1, YEAR2
 msgctxt "_"
@@ -783,11 +789,11 @@ msgstr ""
 #. (itstool) path: note/p
 #: C/screenshot.page:37
 msgid ""
-"Your screenshot will be saved in your <gui>Pictures</gui> folder under the "
-"name <file>Screenshot from Name-of-the-Video.png</file>."
+"Your screenshot will be saved in your <gui>Screenshots</gui> folder under "
+"the name <file>Screenshot from Name-of-the-Video.png</file>."
 msgstr ""
-"Votre capture d’écran est enregistrée dans votre dossier <gui>Images</gui> "
-"sous le nom <file>Capture de Nom-de-la-vidéo.png</file>."
+"Votre capture d’écran sera enregistrée dans votre dossier <gui>Captures "
+"d’écran</gui> sous le nom <file>Capture de Nom-de-la-vidéo.png</file>."
 
 #. (itstool) path: info/desc
 #: C/sound-language.page:27

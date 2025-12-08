@@ -1,2 +1,2 @@
-debian/Don-t-run-pylint-at-build-time.patch
+Mark-lint-checks-as-part-of-a-suite.patch
 use-policorp-codec-install.patch

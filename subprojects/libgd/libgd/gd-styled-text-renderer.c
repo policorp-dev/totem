@@ -21,11 +21,13 @@
 
 #include "gd-styled-text-renderer.h"
 
-G_DEFINE_TYPE (GdStyledTextRenderer, gd_styled_text_renderer, GTK_TYPE_CELL_RENDERER_TEXT);
+typedef struct _GdStyledTextRendererPrivate GdStyledTextRendererPrivate;
 
 struct _GdStyledTextRendererPrivate {
   GList *style_classes;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE (GdStyledTextRenderer, gd_styled_text_renderer, GTK_TYPE_CELL_RENDERER_TEXT)
 
 static void
 gd_styled_text_renderer_render (GtkCellRenderer      *cell,
@@ -36,14 +38,17 @@ gd_styled_text_renderer_render (GtkCellRenderer      *cell,
                                 GtkCellRendererState  flags)
 {
   GdStyledTextRenderer *self = GD_STYLED_TEXT_RENDERER (cell);
+  GdStyledTextRendererPrivate *priv;
   GtkStyleContext *context;
   const gchar *style_class;
   GList *l;
 
+  priv = gd_styled_text_renderer_get_instance_private (self);
+
   context = gtk_widget_get_style_context (widget);
   gtk_style_context_save (context);
 
-  for (l = self->priv->style_classes; l != NULL; l = l->next)
+  for (l = priv->style_classes; l != NULL; l = l->next)
     {
       style_class = l->data;
       gtk_style_context_add_class (context, style_class);
@@ -60,11 +65,14 @@ static void
 gd_styled_text_renderer_finalize (GObject *obj)
 {
   GdStyledTextRenderer *self = GD_STYLED_TEXT_RENDERER (obj);
+  GdStyledTextRendererPrivate *priv;
 
-  if (self->priv->style_classes != NULL)
+  priv = gd_styled_text_renderer_get_instance_private (self);
+
+  if (priv->style_classes != NULL)
     {
-      g_list_free_full (self->priv->style_classes, g_free);
-      self->priv->style_classes = NULL;
+      g_list_free_full (priv->style_classes, g_free);
+      priv->style_classes = NULL;
     }
 
   G_OBJECT_CLASS (gd_styled_text_renderer_parent_class)->finalize (obj);
@@ -78,15 +86,11 @@ gd_styled_text_renderer_class_init (GdStyledTextRendererClass *klass)
 
   oclass->finalize = gd_styled_text_renderer_finalize;
   crclass->render = gd_styled_text_renderer_render;
-
-  g_type_class_add_private (klass, sizeof (GdStyledTextRendererPrivate));
 }
 
 static void
 gd_styled_text_renderer_init (GdStyledTextRenderer *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, GD_TYPE_STYLED_TEXT_RENDERER,
-                                            GdStyledTextRendererPrivate);
 }
 
 GtkCellRenderer *
@@ -100,25 +104,31 @@ void
 gd_styled_text_renderer_add_class (GdStyledTextRenderer *self,
                                    const gchar *class)
 {
-  if (g_list_find_custom (self->priv->style_classes, class, (GCompareFunc) g_strcmp0))
+  GdStyledTextRendererPrivate *priv;
+
+  priv = gd_styled_text_renderer_get_instance_private (self);
+
+  if (g_list_find_custom (priv->style_classes, class, (GCompareFunc) g_strcmp0))
     return;
 
-  self->priv->style_classes = g_list_append (self->priv->style_classes, g_strdup (class));
+  priv->style_classes = g_list_append (priv->style_classes, g_strdup (class));
 }
 
 void
 gd_styled_text_renderer_remove_class (GdStyledTextRenderer *self,
                                       const gchar *class)
 {
+  GdStyledTextRendererPrivate *priv;
   GList *class_element;
 
-  class_element = g_list_find_custom (self->priv->style_classes, class, (GCompareFunc) g_strcmp0);
+  priv = gd_styled_text_renderer_get_instance_private (self);
+
+  class_element = g_list_find_custom (priv->style_classes, class, (GCompareFunc) g_strcmp0);
 
   if (class_element == NULL)
     return;
 
-  self->priv->style_classes = g_list_remove_link (self->priv->style_classes,
-                                                  class_element);
+  priv->style_classes = g_list_remove_link (priv->style_classes, class_element);
   g_free (class_element->data);
   g_list_free_1 (class_element);
 }
